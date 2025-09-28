@@ -1,9 +1,12 @@
 import { useCallback, useState } from "react";
 import SearchBar from "../SearchBar";
-import MovieCard from "../MovieCard";
 import type { Movie } from "../../types/movie";
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  onSearchResultsChange: (results: Movie[]) => any;
+}
+
+export default function HeroSection({ onSearchResultsChange }: HeroSectionProps) {
   const [results, setResults] = useState<Movie[]>([])
   
 
@@ -17,7 +20,7 @@ export default function HeroSection() {
       }
       const data = await res.json()
       setResults(data.results || [])
-      console.log(data)
+      onSearchResultsChange(data.results || [])
     } catch (err: any) {
       // TODO: handle this better
       console.log(err);
@@ -39,17 +42,6 @@ export default function HeroSection() {
         <SearchBar 
           onSearch={onSearch}
         />
-      </div>
-
-      <div className="mt-6 grid gap-6 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
-        {results.map((m) => (
-          <MovieCard
-            key={m.id}
-            title={m.title}
-            poster_path={m.poster_path}
-            onAdd={() => console.log(`Add ${m.title} (${m.id}) to library`)}
-          />
-        ))}
       </div>
     </div>
   )

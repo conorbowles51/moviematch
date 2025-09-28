@@ -9,7 +9,7 @@ interface MovieCardProps {
 
 export default function MovieCard({ poster_path, title, onAdd }: MovieCardProps) {
   return (
-    <div className="relative w-48 rounded-lg overflow-hidden shadow-lg bg-zinc-800">
+    <div className="relative w-48 rounded-lg overflow-hidden shadow-lg bg-zinc-800 hover:scale-110 transition-all">
       {/* Poster Image */}
       <img
         src={`${TMDB_IMAGE_BASE}${poster_path}`}
@@ -18,11 +18,11 @@ export default function MovieCard({ poster_path, title, onAdd }: MovieCardProps)
       />
 
       {/* Overlay with title + button */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-black/20 p-3">
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
         <h2 className="text-white font-semibold text-sm truncate">{title}</h2>
         <button
           onClick={onAdd}
-          className="mt-2 w-full bg-red-600 text-white text-xs py-1 rounded hover:bg-red-500 transition"
+          className="mt-2 w-full bg-red-600 text-white text-xs py-1 rounded hover:bg-red-500 transition cursor-pointer"
         >
           + Add to Library
         </button>
