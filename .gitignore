@@ -16,6 +16,7 @@ web_app/vite/deps/
 
 
 wep_app/node_modules
+node_modules
 dist
 dist-ssr
 *.local

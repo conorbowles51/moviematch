@@ -1,3 +1,4 @@
+
 import SearchBar from "./components/SearchBar"
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
       </div>
       
     </main>
+
   )
 }
 
