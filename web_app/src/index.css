@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@layer utilities {
+  .font-bebas {
+    font-family: 'Bebas Neue', sans-serif;
+  }
+
+  .font-montserrat {
+    font-family: 'Montserrat', sans-serif;
+  }
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
