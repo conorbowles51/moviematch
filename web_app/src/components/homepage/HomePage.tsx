@@ -9,7 +9,7 @@ export default function HomePage() {
   const [movies, setMovies] = useState<Movie[]>([])
 
   return (
-    <main className="w-full min-h-screen flex flex-col items-center bg-zinc-50">
+    <main className="w-full min-h-screen flex flex-col items-center bg-zinc-950">
       <Navbar />
       <HeroSection 
         onSearchResultsChange={(results) => {setMovies(results); console.log("TEST")}}

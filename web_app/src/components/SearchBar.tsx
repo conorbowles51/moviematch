@@ -1,3 +1,4 @@
+import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 
 
@@ -27,7 +28,8 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   }, [debounced, onSearch])
 
   return (
-    <div className="w-full flex gap-4 justify-center">
+    <div className="w-full flex gap-4 justify-center items-center">
+      <Search className="text-white"/>
       <input 
         value={query}
         onChange={(e) => setQuery(e.target.value)}

@@ -9,7 +9,7 @@ interface MovieCardProps {
 
 export default function MovieCard({ poster_path, title, onAdd }: MovieCardProps) {
   return (
-    <div className="relative w-48 rounded-lg overflow-hidden shadow-lg bg-zinc-800 hover:scale-110 transition-all">
+    <div className="relative w-48 rounded-lg overflow-hidden shadow-2xl bg-zinc-800 hover:scale-110 transition-all drop-shadow-[0_12px_24px_rgba(0,0,0,0.6)]">
       {/* Poster Image */}
       <img
         src={`${TMDB_IMAGE_BASE}${poster_path}`}

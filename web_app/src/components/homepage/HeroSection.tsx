@@ -28,12 +28,16 @@ export default function HeroSection({ onSearchResultsChange }: HeroSectionProps)
   }, [])
 
   return (
-    <div className="w-full h-100 flex flex-col justify-between bg-zinc-900 p-6">
+    <div className="w-full h-100 relative">
+      <div className="absolute top-0 left-0 w-full h-full z-0 ">
+        <img src="/popcorn.jpeg" className="w-full h-full object-cover"/>
+      </div>
+      <div className="w-full h-100  flex flex-col justify-between bg-gradient-to-r from-black from-30% to-transparent p-6 relative z-10">
       <div>
-        <h1 className="text-zinc-50 text-8xl font-bebas">
-          MovieMatch
+        <h1 className="text-white text-8xl font-bebas mt-20">
+          Movie Match
         </h1>
-        <p className="text-zinc-200 ml-5">
+        <p className="text-zinc-200 ml-1 text-sm">
           Find the perfect movie to watch together.
         </p>
       </div>
@@ -42,6 +46,7 @@ export default function HeroSection({ onSearchResultsChange }: HeroSectionProps)
         <SearchBar 
           onSearch={onSearch}
         />
+      </div>
       </div>
     </div>
   )
