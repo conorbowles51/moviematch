@@ -2,11 +2,15 @@ from datetime import datetime
 from app import db
 
 from sqlalchemy import Column, Integer, ForeignKey, String, DateTime
+from flask_login import UserMixin
 from flask_bcrypt import Bcrypt
 
 bcrypt = Bcrypt()
 
-class User(db.Model):
+
+# UserMixin gives flask built in properties, e.g, is_authenticated or get_id()
+
+class User(db.Model, UserMixin):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
