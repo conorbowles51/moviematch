@@ -28,12 +28,12 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
   }, [debounced, onSearch])
 
   return (
-    <div className="w-full flex gap-4 justify-center items-center">
-      <Search className="text-white"/>
+    <div className="w-full flex gap-4 justify-center items-center bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 shadow-xl">
+      <Search className="text-white flex-shrink-0" size={20} />
       <input 
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="border px-3 py-2 rounded-sm text-zinc-50 w-full max-w-200" 
+        className="bg-transparent border-none outline-none text-white placeholder-zinc-300 w-full text-lg" 
         placeholder="Search for a movie..."
       />
     </div>

@@ -9,24 +9,31 @@ interface MovieCardProps {
 
 export default function MovieCard({ poster_path, title, onAdd }: MovieCardProps) {
   return (
-    <div className="relative w-48 rounded-lg overflow-hidden shadow-2xl bg-zinc-800 hover:scale-110 transition-all drop-shadow-[0_12px_24px_rgba(0,0,0,0.6)]">
+    <div className="group relative w-48 rounded-xl overflow-hidden bg-zinc-800 border border-zinc-700/50 hover:border-zinc-600/80 shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.7)] transform hover:scale-105 transition-all duration-300 ease-out">
       {/* Poster Image */}
-      <img
-        src={`${TMDB_IMAGE_BASE}${poster_path}`}
-        alt={title}
-        className="w-full h-72 object-cover"
-      />
+      <div className="relative overflow-hidden">
+        <img
+          src={`${TMDB_IMAGE_BASE}${poster_path}`}
+          alt={title}
+          className="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
+        />
+        {/* Subtle gradient overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </div>
 
       {/* Overlay with title + button */}
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
-        <h2 className="text-white font-semibold text-sm truncate">{title}</h2>
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-4">
+        <h2 className="text-white font-bold text-sm leading-tight mb-3 line-clamp-2 drop-shadow-sm">{title}</h2>
         <button
           onClick={onAdd}
-          className="mt-2 w-full bg-red-600 text-white text-xs py-1 rounded hover:bg-red-500 transition cursor-pointer"
+          className="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white text-xs font-medium py-2 px-3 rounded-lg shadow-lg hover:shadow-red-500/25 transform hover:-translate-y-0.5 transition-all duration-200 ease-out active:scale-95"
         >
           + Add to Library
         </button>
       </div>
+      
+      {/* Subtle rim light effect */}
+      <div className="absolute inset-0 rounded-xl ring-1 ring-white/10 group-hover:ring-white/20 transition-all duration-300 pointer-events-none" />
     </div>
   )
 }

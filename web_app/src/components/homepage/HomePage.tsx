@@ -14,7 +14,7 @@ export default function HomePage() {
       <HeroSection 
         onSearchResultsChange={(results) => {setMovies(results); console.log("TEST")}}
       />
-      <MovieList movies={movies}/>      
+      <MovieList movies={movies}/>     
     </main>
   )
 }

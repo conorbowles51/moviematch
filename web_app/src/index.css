@@ -9,6 +9,10 @@
   .font-montserrat {
     font-family: 'Montserrat', sans-serif;
   }
+
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
 }
 
 body {
