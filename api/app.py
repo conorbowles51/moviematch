@@ -1,9 +1,18 @@
+import os
 from flask import Flask
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from config import Config
 from extensions.login import login_manager
+from dotenv import load_dotenv
+
+load_dotenv()
+
+TMDB_API_KEY = os.getenv("TMDB_API_KEY")
+TMDB_BASE_URL = os.getenv("TMDB_BASE_URL")
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS")
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -17,6 +26,8 @@ def create_app():
     migrate.init_app(app, db)
     bcrypt.init_app(app)
     login_manager.init_app(app)
+
+    CORS(app, supports_credentials=True, origins=ALLOWED_ORIGINS)
 
     # import models so Alembic sees them
     from models import User

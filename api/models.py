@@ -16,7 +16,7 @@ class User(db.Model, UserMixin):
     id = Column(Integer, primary_key=True)
     email = Column(String(255), unique=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
-    display_name = Column(String(255))
+    display_name = Column(String(255), nullable=False)
     created_at = Column(DateTime, default=datetime.now())
 
     # helper methods for password hashing
