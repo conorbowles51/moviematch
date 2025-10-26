@@ -1,9 +1,9 @@
 
 import { useState } from 'react'
-import HeroSection from './HeroSection'
-import MovieList from './MovieList'
-import type { Movie } from '../../types/movie'
-import Navbar from '../Navbar'
+import HeroSection from '../components/homepage/HeroSection'
+import MovieList from '../components/homepage/MovieList'
+import type { Movie } from '../types/movie'
+import Navbar from '../components/Navbar'
 
 export default function HomePage() {
   const [movies, setMovies] = useState<Movie[]>([])
