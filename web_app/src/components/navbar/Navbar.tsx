@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
+import { Menu } from "lucide-react";
+import UserMenu from "./UserMenu";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -27,12 +29,7 @@ export default function Navbar() {
               Groups
             </Link>
             {user ? (
-              <>
-                <span className="ml-8">{user.display_name}</span>
-                <button onClick={logout} className="px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200 cursor-pointer">
-                  Logout
-                </button>
-              </>
+              <UserMenu />
             ) : (
               <Link to="/login" className="px-4 py-2 text-red-600 text-sm font-mediu hover:text-red-500 font-bold hover:bg-white/10 rounded-lg transition-all duration-200 cursor-pointer">
                 Login

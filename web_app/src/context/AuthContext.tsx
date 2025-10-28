@@ -65,7 +65,7 @@ export function AuthProvider({children}: {children: React.ReactNode}) {
     setError(null);
     const me = await jsonFetch("/api/auth/register", {
       method: "POST",
-      body: JSON.stringify({ email, password, displayName }),
+      body: JSON.stringify({ email, password, display_name: displayName }),
     });
     setUser(me);
   }
