@@ -30,7 +30,8 @@ def create_app():
     CORS(app, supports_credentials=True, origins=ALLOWED_ORIGINS)
 
     # import models so Alembic sees them
-    from models import User
+    from models.user import User
+    from models.library_item import LibraryItem
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -39,8 +40,10 @@ def create_app():
     # register blueprints
     from routes.auth import auth_bp
     from routes.movies import movies_bp
+    from routes.library import library_bp
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(movies_bp, url_prefix="/api/movies")
+    app.register_blueprint(library_bp, url_prefix="/api/library")
 
     @app.get("/health")
     def health():

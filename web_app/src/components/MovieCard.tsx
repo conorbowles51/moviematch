@@ -1,3 +1,4 @@
+import { tmdbPosterUrl } from "../utils/tmdb";
 
 interface MovieCardProps {
   poster_url: string;
@@ -11,7 +12,7 @@ export default function MovieCard({ poster_url, title, onAdd }: MovieCardProps) 
       {/* Poster Image */}
       <div className="relative overflow-hidden">
         <img
-          src={`${poster_url}`}
+          src={`${tmdbPosterUrl(poster_url, "w500")}`}
           alt={title}
           className="w-full h-72 object-cover group-hover:scale-110 transition-transform duration-500 ease-out"
         />

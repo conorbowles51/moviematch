@@ -21,7 +21,7 @@ def search_movies_route():
                 "id": m.get("id"),
                 "title": m.get("title"),
                 "overview": m.get("overview"),
-                "poster_url": f"{TMDB_IMAGE_BASE}{m['poster_path']}" if m.get("poster_path") else None,
+                "poster_url": f"{m['poster_path']}" if m.get("poster_path") else None,
                 "release_date": m.get("release_date"),
                 "vote_average": m.get("vote_average"),
             }
