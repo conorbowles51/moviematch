@@ -1,4 +1,5 @@
 
+import { useAuth } from '../../context/AuthContext';
 import type { Movie } from '../../types/movie';
 import MovieCard from '../MovieCard';
 
@@ -7,6 +8,8 @@ interface MovieListProps {
 }
 
 export default function MovieList({ movies }: MovieListProps) {
+  const { user } = useAuth();
+
   if (movies.length === 0) {
     return (
       <div className="w-full max-w-7xl mx-auto px-8 py-16">
@@ -40,9 +43,8 @@ export default function MovieList({ movies }: MovieListProps) {
         {movies.map((movie) => (
           <div key={movie.id} className="flex justify-center">
             <MovieCard
-              title={movie.title}
-              poster_url={movie.poster_url}
-              onAdd={() => console.log(`Add ${movie.title} (${movie.id}) to library`)}
+              isAuthenticated={!!user}
+              movie={movie}
             />
           </div>
         ))}
