@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { tmdbPosterUrl } from "../utils/tmdb";
 import type { Movie } from "../types/movie";
 
@@ -13,6 +13,7 @@ interface MovieCardProps {
   onSaved?: (movieId: number) => void;
   /** Optional: tweak card width */
   className?: string;
+  hideSavedStatus?: boolean;
 }
 
 export default function MovieCard({
@@ -21,6 +22,7 @@ export default function MovieCard({
   initialSaved = false,
   onSaved,
   className = "w-48",
+  hideSavedStatus = false
 }: MovieCardProps) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(initialSaved);
@@ -110,37 +112,46 @@ export default function MovieCard({
             </span>
           )}
         </div>
+
+        {/* Add/Save Button - positioned in top-right */}
+        {!hideSavedStatus && isAuthenticated && (
+          <div className="absolute top-2 right-2">
+            <button
+              onClick={saveToLibrary}
+              disabled={saved || saving}
+              className={[
+                "w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium",
+                "backdrop-blur-sm border transition-all duration-200",
+                saved
+                  ? "bg-emerald-600/90 border-emerald-500/50 hover:bg-emerald-500/90"
+                  : "bg-black/70 border-white/20 hover:bg-black/80 hover:border-white/40",
+                "shadow-lg hover:scale-110 active:scale-95 disabled:opacity-70",
+              ].join(" ")}
+              aria-label={saved ? "Saved to library" : "Add to library"}
+            >
+              {saved ? "✓" : saving ? "⋯" : "+"}
+            </button>
+          </div>
+        )}
+
+        {/* Login prompt for non-authenticated users */}
+        {!hideSavedStatus && !isAuthenticated && (
+          <div className="absolute top-2 right-2">
+            <a
+              href="/login"
+              className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm bg-black/70 border border-white/20 hover:bg-black/80 hover:border-white/40 backdrop-blur-sm transition-all duration-200"
+              aria-label="Log in to save"
+            >
+              +
+            </a>
+          </div>
+        )}
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-3">
         <h2 className="text-white font-semibold text-sm leading-snug mb-2 line-clamp-2 drop-shadow-sm">
           {movie.title}
         </h2>
-
-        {isAuthenticated ? (
-          <button
-            onClick={saveToLibrary}
-            disabled={saved || saving}
-            className={[
-              "w-full cursor-pointer text-white text-xs font-medium py-2 px-3 rounded-lg",
-              "bg-gradient-to-r",
-              saved
-                ? "from-emerald-600 to-emerald-500"
-                : "from-red-600 to-red-500 hover:from-red-500 hover:to-red-400",
-              "shadow-lg hover:shadow-red-500/25 active:scale-95 transition-all duration-200 ease-out disabled:opacity-70",
-            ].join(" ")}
-            aria-label={saved ? "Saved to library" : "Add to library"}
-          >
-            {saved ? "✓ Saved" : saving ? "Saving…" : "+ Add to Library"}
-          </button>
-        ) : (
-          <a
-            href="/login"
-            className="block w-full text-center text-xs font-medium py-2 px-3 rounded-lg bg-white/10 text-white hover:bg-white/15 transition"
-          >
-            Log in to save
-          </a>
-        )}
 
         {error && (
           <div className="mt-2 text-[11px] text-red-300/90">{error}</div>

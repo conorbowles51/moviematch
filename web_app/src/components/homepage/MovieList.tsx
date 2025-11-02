@@ -1,14 +1,47 @@
 
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import type { Movie } from '../../types/movie';
 import MovieCard from '../MovieCard';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface MovieListProps {
   movies: Movie[];
 }
 
+interface LibraryItem {
+  movie_id: number;
+}
+
 export default function MovieList({ movies }: MovieListProps) {
   const { user } = useAuth();
+
+  const [savedIds, setSavedIds] = useState<number[]>([])
+
+  const fetchSavedIds = async () => {
+    try {
+      // Fetch the user's library (requires the user to be logged in)
+      const res = await fetch(`${API_URL}/api/library`, {
+        credentials: "include", // include cookies if using session auth
+      });
+
+      if (!res.ok) {
+        console.warn("Failed to fetch library:", res.status);
+        return;
+      }
+
+      const data = await res.json();
+
+      setSavedIds(data.map((item: LibraryItem) => item.movie_id));
+    } catch (err) {
+      console.error("Error fetching library:", err);
+    }
+  }
+
+  useEffect(() => {
+    fetchSavedIds()
+  }, []);
 
   if (movies.length === 0) {
     return (
@@ -45,6 +78,7 @@ export default function MovieList({ movies }: MovieListProps) {
             <MovieCard
               isAuthenticated={!!user}
               movie={movie}
+              initialSaved={savedIds.includes(movie.id)}
             />
           </div>
         ))}
