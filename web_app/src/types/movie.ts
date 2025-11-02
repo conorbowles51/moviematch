@@ -3,5 +3,5 @@ export type Movie = {
   title: string
   release_date?: string
   overview?: string
-  poster_path: string
+  poster_url: string
 }

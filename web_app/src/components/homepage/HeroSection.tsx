@@ -14,7 +14,7 @@ export default function HeroSection({ onSearchResultsChange }: HeroSectionProps)
   const onSearch = useCallback(async (q: string) => {
     console.log("Searching for: ", q)
     try {
-      const res = await fetch(`http://localhost:8000/movies/search?query=${encodeURIComponent(q)}`)
+      const res = await fetch(`http://localhost:5000/api/movies/search?q=${encodeURIComponent(q)}`)
       if (!res.ok) {
         throw new Error(`Backend error: ${res.status}`)
       }

@@ -41,7 +41,7 @@ export default function MovieList({ movies }: MovieListProps) {
           <div key={movie.id} className="flex justify-center">
             <MovieCard
               title={movie.title}
-              poster_path={movie.poster_path}
+              poster_url={movie.poster_url}
               onAdd={() => console.log(`Add ${movie.title} (${movie.id}) to library`)}
             />
           </div>

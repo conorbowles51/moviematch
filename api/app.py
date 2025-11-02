@@ -38,7 +38,9 @@ def create_app():
 
     # register blueprints
     from routes.auth import auth_bp
+    from routes.movies import movies_bp
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    app.register_blueprint(movies_bp, url_prefix="/api/movies")
 
     @app.get("/health")
     def health():
