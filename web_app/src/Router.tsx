@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { useAuth } from "./context/AuthContext";
+import MovieDetail from "./pages/MovieDetail";
 
 const Home = lazy(() => import("./pages/Home"))
 const Login = lazy(() => import("./pages/Login"));
@@ -70,6 +71,14 @@ export const router = createBrowserRouter([
         </Suspense>
       </RequireAuth>
     ),
+  },
+  {
+    path: "/movies/:movieId",
+    element: (
+      <Suspense fallback={null}>
+        <MovieDetail />
+      </Suspense>
+    )
   },
   {
     path: "*",

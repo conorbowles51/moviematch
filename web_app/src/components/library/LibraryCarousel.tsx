@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import type { Movie } from "../../types/movie";
 import LibraryItemCard from "./LibraryItemCard";
 
@@ -13,6 +14,9 @@ export default function LibraryCarousel({ movies, onRemove }: LibraryCarouselPro
   const hasCenteredRef = useRef(false);
   const [sidePad, setSidePad] = useState(0);
   const boundsRef = useRef<{ minLeft: number; maxLeft: number }>({ minLeft: 0, maxLeft: 0 });
+  const [centerIndex, setCenterIndex] = useState(0);
+  const [detailsCache, setDetailsCache] = useState<Record<number, { overview?: string; genres?: string[]; vote_average?: number; runtime?: number }>>({});
+  const API_URL = (import.meta as any).env.VITE_API_URL as string | undefined;
 
   // Update scale of each card based on distance to center
   useEffect(() => {
@@ -26,28 +30,29 @@ export default function LibraryCarousel({ movies, onRemove }: LibraryCarouselPro
       const rect = container.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const cards = Array.from(container.querySelectorAll<HTMLElement>("[data-index]"));
-      const next = cards.map((node) => {
+      const distances: number[] = [];
+      const next = cards.map((node, idx) => {
         const r = node.getBoundingClientRect();
         const cardCenter = r.left + r.width / 2;
         const dist = Math.abs(centerX - cardCenter);
+        distances[idx] = dist;
         const norm = Math.min(dist / (rect.width / 2), 1); // 0 at center, 1 at far edge
         const scale = 0.85 + (1.1 - 0.85) * (1 - Math.pow(norm, 0.9));
         return Math.round(scale * 1000) / 1000;
       });
       setScales(next);
+      // Pick the closest card to center
+      if (distances.length) {
+        let minI = 0;
+        let minV = distances[0];
+        for (let i = 1; i < distances.length; i++) if (distances[i] < minV) { minV = distances[i]; minI = i; }
+        setCenterIndex(minI);
+      }
     };
 
     const onScroll = () => {
       cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const scroller = containerRef.current;
-        if (scroller) {
-          const { minLeft, maxLeft } = boundsRef.current;
-          if (scroller.scrollLeft < minLeft) scroller.scrollLeft = minLeft;
-          else if (scroller.scrollLeft > maxLeft) scroller.scrollLeft = maxLeft;
-        }
-        updateScales();
-      });
+      raf = requestAnimationFrame(updateScales);
     };
 
     const onResize = () => updateScales();
@@ -61,6 +66,29 @@ export default function LibraryCarousel({ movies, onRemove }: LibraryCarouselPro
       cancelAnimationFrame(raf);
     };
   }, [movies.length]);
+
+  // Preload details for the centered movie so we can show overview/genres
+  useEffect(() => {
+    const movie = movies[centerIndex];
+    if (!movie || !API_URL) return;
+    if (detailsCache[movie.id]) return; // cached
+    (async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/movies/${movie.id}`);
+        const data = await res.json();
+        if (!res.ok) return;
+        setDetailsCache((prev) => ({
+          ...prev,
+          [movie.id]: {
+            overview: data?.overview,
+            genres: data?.genres,
+            vote_average: data?.vote_average,
+            runtime: data?.runtime,
+          },
+        }));
+      } catch {}
+    })();
+  }, [centerIndex, movies, API_URL, detailsCache]);
 
   // Measure dynamic side padding so first/last items can be centered without overscrolling
   useEffect(() => {
@@ -100,24 +128,6 @@ export default function LibraryCarousel({ movies, onRemove }: LibraryCarouselPro
     };
   }, [movies.length]);
 
-  // Center on the middle item on first render after measurements
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el || hasCenteredRef.current || movies.length === 0) return;
-    const middle = Math.floor(movies.length / 2);
-    requestAnimationFrame(() => {
-      const target = el.querySelector<HTMLElement>(`[data-index='${middle}']`);
-      if (!target) return;
-      const desired = target.offsetLeft + target.offsetWidth / 2 - el.clientWidth / 2;
-      const { minLeft, maxLeft } = boundsRef.current;
-      const left = Math.max(minLeft, Math.min(desired, maxLeft));
-      el.scrollTo({ left, behavior: "auto" });
-      hasCenteredRef.current = true;
-    });
-  }, [movies.length, sidePad]);
-
-
-
   // Scroll helpers
   const scrollByItem = (dir: -1 | 1) => {
     const el = containerRef.current;
@@ -125,7 +135,9 @@ export default function LibraryCarousel({ movies, onRemove }: LibraryCarouselPro
     const firstCard = el.querySelector<HTMLElement>("[data-index='0']");
     const step = firstCard ? firstCard.offsetWidth + 16 /* gap */ : Math.min(320, el.clientWidth * 0.6);
     const { minLeft, maxLeft } = boundsRef.current;
-    const target = Math.max(minLeft, Math.min(el.scrollLeft + dir * step, maxLeft));
+    const fallbackMax = Math.max(0, el.scrollWidth - el.clientWidth);
+    const upper = maxLeft || fallbackMax;
+    const target = Math.max(minLeft, Math.min(el.scrollLeft + dir * step, upper));
     el.scrollTo({ left: target, behavior: "smooth" });
   };
 
@@ -156,10 +168,9 @@ export default function LibraryCarousel({ movies, onRemove }: LibraryCarouselPro
       <div
         ref={containerRef}
         className="relative overflow-x-auto snap-x snap-mandatory px-8 py-4 no-scrollbar"
+        style={{ scrollPaddingLeft: sidePad, scrollPaddingRight: sidePad }}
       >
         <div className="flex items-center gap-4">
-          {/* Dynamic spacers to prevent left/right overscroll (no snap points) */}
-          <div className="shrink-0 snap-none" style={{ width: sidePad }} aria-hidden />
           {movies.map((movie, i) => (
             <div
               key={movie.id}
@@ -170,9 +181,56 @@ export default function LibraryCarousel({ movies, onRemove }: LibraryCarouselPro
               <LibraryItemCard movie={movie} onRemove={onRemove} className="w-48 md:w-56" />
             </div>
           ))}
-          <div className="shrink-0 snap-none" style={{ width: sidePad }} aria-hidden />
         </div>
       </div>
+
+      {/* Details panel for centered movie */}
+      {movies[centerIndex] && (
+        <div className="mt-6 px-8">
+          <div className="mx-auto max-w-3xl rounded-xl border border-white/10 bg-black/40 p-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <div className="text-white text-lg font-semibold">{movies[centerIndex].title}</div>
+                <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px]">
+                  {movies[centerIndex].release_date?.slice(0,4) && (
+                    <span className="px-2 py-0.5 rounded-full bg-black/70 text-white/80 border border-white/10">
+                      {movies[centerIndex].release_date!.slice(0,4)}
+                    </span>
+                  )}
+                  {detailsCache[movies[centerIndex].id]?.runtime ? (
+                    <span className="px-2 py-0.5 rounded-full bg-black/70 text-white/80 border border-white/10">
+                      {Math.floor((detailsCache[movies[centerIndex].id]!.runtime as number)/60)}h {(detailsCache[movies[centerIndex].id]!.runtime as number)%60}m
+                    </span>
+                  ) : null}
+                  {!!detailsCache[movies[centerIndex].id]?.genres?.length && (
+                    <span className="px-2 py-0.5 rounded-full bg-black/70 text-white/80 border border-white/10">
+                      {detailsCache[movies[centerIndex].id]!.genres!.slice(0,3).join(" • ")}
+                    </span>
+                  )}
+                  {(detailsCache[movies[centerIndex].id]?.vote_average ?? movies[centerIndex].vote_average) && (
+                    <span className="px-2 py-0.5 rounded-full bg-black/70 text-white/80 border border-white/10">
+                      ★ {((detailsCache[movies[centerIndex].id]?.vote_average ?? movies[centerIndex].vote_average) as number).toFixed(1)}
+                    </span>
+                  )}
+                </div>
+                {detailsCache[movies[centerIndex].id]?.overview && (
+                  <p className="mt-2 text-sm overflow-ellipsis line-clamp-1 text-zinc-300">
+                    {detailsCache[movies[centerIndex].id]!.overview}
+                  </p>
+                )}
+              </div>
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <Link
+                  to={`/movies/${movies[centerIndex].id}`}
+                  className="px-3 py-1.5 rounded-md min-w-32 text-center bg-zinc-800 text-white text-sm border border-white/10 hover:bg-zinc-700 transition"
+                >
+                  View Details
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { tmdbPosterUrl } from "../utils/tmdb";
 import type { Movie } from "../types/movie";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -13,7 +14,6 @@ interface MovieCardProps {
   onSaved?: (movieId: number) => void;
   /** Optional: tweak card width */
   className?: string;
-  hideSavedStatus?: boolean;
 }
 
 export default function MovieCard({
@@ -22,8 +22,9 @@ export default function MovieCard({
   initialSaved = false,
   onSaved,
   className = "w-48",
-  hideSavedStatus = false
 }: MovieCardProps) {
+  const navigate = useNavigate();
+
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(initialSaved);
   const [error, setError] = useState<string | null>(null);
@@ -81,6 +82,7 @@ export default function MovieCard({
         "transform hover:scale-[1.03] transition-all duration-300 ease-out focus-within:ring-2 focus-within:ring-zinc-400/40",
         className,
       ].join(" ")}
+      onClick={() => navigate(`/movies/${movie.id}`)}
     >
       {/* Poster */}
       <div className="relative overflow-hidden">
@@ -114,31 +116,48 @@ export default function MovieCard({
         </div>
 
         {/* Add/Save Button - positioned in top-right */}
-        {!hideSavedStatus && isAuthenticated && (
+        {isAuthenticated && (
           <div className="absolute top-2 right-2">
-            <button
-              onClick={saveToLibrary}
-              disabled={saved || saving}
-              className={[
-                "w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium",
-                "backdrop-blur-sm border transition-all duration-200",
-                saved
-                  ? "bg-emerald-600/90 border-emerald-500/50 hover:bg-emerald-500/90"
-                  : "bg-black/70 border-white/20 hover:bg-black/80 hover:border-white/40",
-                "shadow-lg hover:scale-110 active:scale-95 disabled:opacity-70",
-              ].join(" ")}
-              aria-label={saved ? "Saved to library" : "Add to library"}
-            >
-              {saved ? "✓" : saving ? "⋯" : "+"}
-            </button>
+            <div className="relative group">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  saveToLibrary();
+                }}
+                disabled={saved || saving}
+                className={[
+                  "w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium",
+                  "backdrop-blur-sm border transition-all duration-200",
+                  saved
+                    ? "bg-emerald-600/90 border-emerald-500/50 hover:bg-emerald-500/90"
+                    : "bg-black/70 border-white/20 hover:bg-black/80 hover:border-white/40",
+                  "shadow-lg hover:scale-110 active:scale-95 disabled:opacity-70",
+                ].join(" ")}
+                aria-label={saved ? "Saved to library" : "Add to library"}
+              >
+                {saved ? "✓" : saving ? "⋯" : "+"}
+              </button>
+              {!saved && !saving && (
+                <div
+                  className="pointer-events-none absolute right-0 top-full mt-1 whitespace-nowrap rounded-md bg-black/80 text-white text-xs px-2 py-1 border border-white/20 opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 shadow-lg"
+                  role="tooltip"
+                >
+                  Add to library
+                </div>
+              )}
+            </div>
           </div>
         )}
 
         {/* Login prompt for non-authenticated users */}
-        {!hideSavedStatus && !isAuthenticated && (
+        {!isAuthenticated && (
           <div className="absolute top-2 right-2">
             <a
               href="/login"
+              onClick={(e) => {
+                // Prevent the card's onClick navigation
+                e.stopPropagation();
+              }}
               className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm bg-black/70 border border-white/20 hover:bg-black/80 hover:border-white/40 backdrop-blur-sm transition-all duration-200"
               aria-label="Log in to save"
             >
