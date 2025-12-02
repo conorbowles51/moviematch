@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { useAuth } from "./context/AuthContext";
 import MovieDetail from "./pages/MovieDetail";
+import Recommendations from "./pages/Recommendations";
 
 const Home = lazy(() => import("./pages/Home"))
 const Login = lazy(() => import("./pages/Login"));
@@ -53,11 +54,11 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/groups",
+    path: "/recommendations",
     element: (
       <RequireAuth>
         <Suspense fallback={null}>
-          <Groups />
+          <Recommendations />
         </Suspense>
       </RequireAuth>
     ),

@@ -47,8 +47,8 @@ export default function MovieList({ movies }: MovieListProps) {
     return (
       <div className="w-full max-w-7xl mx-auto px-8 py-16">
         <div className="text-center">
-          <div className="mb-6">
-            <div className="text-6xl mb-4">🎬</div>
+          <div className="mb-6 group">
+            <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">🎬</div>
             <h3 className="text-zinc-400 text-xl font-semibold mb-2">No movies found</h3>
             <p className="text-zinc-500 text-sm max-w-md mx-auto">
               Try searching for a movie above to discover your next favorite film
@@ -61,13 +61,14 @@ export default function MovieList({ movies }: MovieListProps) {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-8 py-12">
-      {/* Results Header */}
-      <div className="mb-8">
-        <h2 className="text-white text-2xl font-bold mb-2">
+      {/* Enhanced Results Header */}
+      <div className="mb-8 group">
+        <h2 className="text-white text-2xl font-bold mb-2 flex items-center gap-3">
           Search Results
+          <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </h2>
         <p className="text-zinc-400 text-sm">
-          Found {movies.length} movie{movies.length === 1 ? '' : 's'}
+          Found <span className="text-red-300 font-medium">{movies.length}</span> movie{movies.length === 1 ? '' : 's'}
         </p>
       </div>
 

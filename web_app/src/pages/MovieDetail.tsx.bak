@@ -84,8 +84,8 @@ export default function MovieDetail() {
       <Navbar />
 
       {/* Hero with Backdrop */}
-      <section className="relative w-full">
-        <div className="relative h-[60vh] min-h-[500px] w-full overflow-hidden">
+      <section className="relative w-full overflow-hidden">
+        <div className="relative h-[42vh] min-h-[280px] w-full">
           {backdrop ? (
             <img src={backdrop} alt="Backdrop" className="absolute inset-0 w-full h-full object-cover" />
           ) : (

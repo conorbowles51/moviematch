@@ -142,16 +142,16 @@ export default function LibraryCarousel({ movies, onRemove }: LibraryCarouselPro
   };
 
   return (
-    <div className="relative">
-      {/* Edge gradients to hint overflow */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-zinc-950 to-transparent z-10" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-zinc-950 to-transparent z-10" />
+    <div className="relative bg-gradient-to-br from-zinc-900/40 to-zinc-900/20 border border-zinc-700/30 rounded-2xl p-6 backdrop-blur-sm shadow-2xl ring-1 ring-white/5">
+      {/* Enhanced edge gradients */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-zinc-900 via-zinc-900/80 to-transparent z-10 rounded-l-2xl" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-zinc-900 via-zinc-900/80 to-transparent z-10 rounded-r-2xl" />
 
-      {/* Arrows */}
+      {/* Enhanced navigation arrows */}
       <button
         type="button"
         onClick={() => scrollByItem(-1)}
-        className="hidden md:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full items-center justify-center text-white/90 bg-black/60 border border-white/10 hover:bg-black/70 transition"
+        className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full items-center justify-center text-white bg-gradient-to-r from-red-600/80 to-red-500/80 border border-red-400/30 hover:from-red-500 hover:to-red-400 transition-all duration-200 shadow-lg hover:shadow-red-500/25 backdrop-blur-sm hover:scale-110 text-xl font-bold"
         aria-label="Scroll left"
       >
         ‹
@@ -159,7 +159,7 @@ export default function LibraryCarousel({ movies, onRemove }: LibraryCarouselPro
       <button
         type="button"
         onClick={() => scrollByItem(1)}
-        className="hidden md:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full items-center justify-center text-white/90 bg-black/60 border border-white/10 hover:bg-black/70 transition"
+        className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full items-center justify-center text-white bg-gradient-to-r from-red-600/80 to-red-500/80 border border-red-400/30 hover:from-red-500 hover:to-red-400 transition-all duration-200 shadow-lg hover:shadow-red-500/25 backdrop-blur-sm hover:scale-110 text-xl font-bold"
         aria-label="Scroll right"
       >
         ›
@@ -184,47 +184,53 @@ export default function LibraryCarousel({ movies, onRemove }: LibraryCarouselPro
         </div>
       </div>
 
-      {/* Details panel for centered movie */}
+      {/* Enhanced details panel for centered movie */}
       {movies[centerIndex] && (
-        <div className="mt-6 px-8">
-          <div className="mx-auto max-w-3xl rounded-xl border border-white/10 bg-black/40 p-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <div className="text-white text-lg font-semibold">{movies[centerIndex].title}</div>
-                <div className="mt-1 flex flex-wrap items-center gap-2 text-[11px]">
+        <div className="mt-8 px-4">
+          <div className="mx-auto max-w-4xl rounded-2xl border border-zinc-700/50 bg-gradient-to-br from-zinc-800/80 to-zinc-900/60 p-6 backdrop-blur-sm shadow-2xl ring-1 ring-white/5">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6">
+              <div className="flex-1">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
+                  <h3 className="text-white text-xl font-bold">{movies[centerIndex].title}</h3>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 mb-4">
                   {movies[centerIndex].release_date?.slice(0,4) && (
-                    <span className="px-2 py-0.5 rounded-full bg-black/70 text-white/80 border border-white/10">
-                      {movies[centerIndex].release_date!.slice(0,4)}
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-zinc-700/60 to-zinc-800/60 text-zinc-200 border border-zinc-600/50 text-xs font-medium">
+                      📅 {movies[centerIndex].release_date!.slice(0,4)}
                     </span>
                   )}
                   {detailsCache[movies[centerIndex].id]?.runtime ? (
-                    <span className="px-2 py-0.5 rounded-full bg-black/70 text-white/80 border border-white/10">
-                      {Math.floor((detailsCache[movies[centerIndex].id]!.runtime as number)/60)}h {(detailsCache[movies[centerIndex].id]!.runtime as number)%60}m
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-zinc-700/60 to-zinc-800/60 text-zinc-200 border border-zinc-600/50 text-xs font-medium">
+                      ⏱️ {Math.floor((detailsCache[movies[centerIndex].id]!.runtime as number)/60)}h {(detailsCache[movies[centerIndex].id]!.runtime as number)%60}m
                     </span>
                   ) : null}
                   {!!detailsCache[movies[centerIndex].id]?.genres?.length && (
-                    <span className="px-2 py-0.5 rounded-full bg-black/70 text-white/80 border border-white/10">
-                      {detailsCache[movies[centerIndex].id]!.genres!.slice(0,3).join(" • ")}
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-red-500/20 to-red-600/20 text-red-200 border border-red-500/30 text-xs font-medium">
+                      🎭 {detailsCache[movies[centerIndex].id]!.genres!.slice(0,2).join(", ")}
                     </span>
                   )}
                   {(detailsCache[movies[centerIndex].id]?.vote_average ?? movies[centerIndex].vote_average) && (
-                    <span className="px-2 py-0.5 rounded-full bg-black/70 text-white/80 border border-white/10">
-                      ★ {((detailsCache[movies[centerIndex].id]?.vote_average ?? movies[centerIndex].vote_average) as number).toFixed(1)}
+                    <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-orange-500/20 text-yellow-200 border border-yellow-500/30 text-xs font-medium">
+                      ⭐ {((detailsCache[movies[centerIndex].id]?.vote_average ?? movies[centerIndex].vote_average) as number).toFixed(1)}
                     </span>
                   )}
                 </div>
                 {detailsCache[movies[centerIndex].id]?.overview && (
-                  <p className="mt-2 text-sm overflow-ellipsis line-clamp-1 text-zinc-300">
+                  <p className="text-zinc-300 leading-relaxed text-sm line-clamp-2">
                     {detailsCache[movies[centerIndex].id]!.overview}
                   </p>
                 )}
               </div>
-              <div className="flex items-center gap-2 self-start sm:self-auto">
+              <div className="flex items-center gap-3 self-start sm:self-auto">
                 <Link
                   to={`/movies/${movies[centerIndex].id}`}
-                  className="px-3 py-1.5 rounded-md min-w-32 text-center bg-zinc-800 text-white text-sm border border-white/10 hover:bg-zinc-700 transition"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 shadow-lg hover:shadow-red-500/25 transition-all duration-200 hover:scale-105 ring-2 ring-white/10 hover:ring-white/20"
                 >
-                  View Details
+                  <span>View Details</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
                 </Link>
               </div>
             </div>

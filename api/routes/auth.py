@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
+from sqlalchemy import or_
 from app import db, bcrypt
 from models.user import User
 
@@ -71,3 +72,41 @@ def get_current_user():
         "email": current_user.email,
         "display_name": current_user.display_name
     }), 200
+
+
+# === SEARCH USERS ===
+@auth_bp.get("/search")
+@login_required
+def search_users():
+    """Search users by display name or email.
+    Returns up to 10 users excluding the current user.
+    Query param: q
+    """
+    query = (request.args.get("q") or "").strip()
+
+    if not query:
+        return jsonify({"results": []}), 200
+
+    try:
+        pattern = f"%{query}%"
+        users = (
+            User.query
+            .filter(
+                User.id != current_user.id,
+                or_(
+                    User.display_name.ilike(pattern),
+                    User.email.ilike(pattern),
+                ),
+            )
+            .order_by(User.display_name.asc())
+            .limit(10)
+            .all()
+        )
+
+        results = [
+            {"id": u.id, "display_name": u.display_name, "email": u.email}
+            for u in users
+        ]
+        return jsonify({"results": results}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

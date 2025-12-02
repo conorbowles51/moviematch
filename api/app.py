@@ -41,9 +41,11 @@ def create_app():
     from routes.auth import auth_bp
     from routes.movies import movies_bp
     from routes.library import library_bp
+    from routes.recommendations import recommendations_bp
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(movies_bp, url_prefix="/api/movies")
     app.register_blueprint(library_bp, url_prefix="/api/library")
+    app.register_blueprint(recommendations_bp, url_prefix="/api/recs")
 
     @app.get("/health")
     def health():
