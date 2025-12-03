@@ -99,21 +99,12 @@ export default function Library() {
           </h1>
           <p className="text-zinc-300 text-lg max-w-2xl mx-auto leading-relaxed">
             Your curated collection of must-watch movies.
-            <span className="text-red-300"> Every film tells a story.</span>
           </p>
         </div>
 
         {/* Page Header */}
-        <div className="mb-8 flex items-end justify-between gap-4">
-          <div className="bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 border border-zinc-700/50 rounded-xl p-6 backdrop-blur-sm shadow-xl ring-1 ring-white/5">
-            <h2 className="text-white text-xl font-bold mb-2 flex items-center gap-2">
-              <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
-              Collection Stats
-            </h2>
-            <p className="text-zinc-300 text-sm">
-              {items.length} movie{items.length === 1 ? '' : 's'} in your personal library
-            </p>
-          </div>
+        <div className="mb-8 flex items-end justify-end gap-4">
+          
           {/* View toggle */}
           {items.length > 0 && (
             <div className="bg-gradient-to-br from-zinc-900/80 to-zinc-900/40 border border-zinc-700/50 rounded-xl p-2 backdrop-blur-sm shadow-xl ring-1 ring-white/5">

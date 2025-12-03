@@ -4,6 +4,7 @@ import { Search, UserPlus, X, Users, WandSparkles, Film } from "lucide-react";
 import type { User } from "../types/user";
 // import { useAuth } from "../context/AuthContext";
 import { tmdbPosterUrl } from "../utils/tmdb";
+import { useNavigate } from "react-router-dom";
 
 type Rec = {
   id: number;
@@ -215,7 +216,6 @@ export default function Recommendations() {
             <div className="mt-8 pt-6 border-t border-zinc-700/30">
                 <button
                 onClick={generate}
-                disabled={loadingRecs || selected.length === 0}
                 className="group relative w-full inline-flex items-center justify-center gap-3 px-6 py-4 rounded-xl text-base font-bold text-white bg-gradient-to-r from-red-600 via-red-500 to-red-600 disabled:opacity-50 hover:from-red-500 hover:via-red-400 hover:to-red-500 shadow-[0_20px_40px_-12px_rgba(239,68,68,0.4)] ring-2 ring-white/10 hover:ring-white/20 transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 hover:scale-[1.02] active:scale-[0.98] overflow-hidden"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -238,8 +238,7 @@ export default function Recommendations() {
             {!recs && !loadingRecs && (
               <div className="h-full flex flex-col items-center justify-center text-center py-20">
                 <div className="relative mb-6">
-                  <div className="text-8xl mb-4 animate-bounce">🎬</div>
-                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-r from-red-500 to-purple-500 rounded-full animate-pulse" />
+                  <div className="text-8xl mb-4 animate-pulse">🎬</div>
                 </div>
                 <h3 className="text-xl font-bold mb-3 bg-gradient-to-r from-zinc-200 to-zinc-400 bg-clip-text text-transparent">
                   Ready for Movie Magic?
@@ -297,8 +296,15 @@ function RecommendationCard({ movie }: { movie: Rec }) {
   const year = movie.release_date ? movie.release_date.slice(0, 4) : undefined;
   const rating = typeof movie.vote_average === "number" ? movie.vote_average.toFixed(1) : undefined;
 
+  const navigate = useNavigate()
+
   return (
-    <div className="group flex gap-5 rounded-2xl bg-gradient-to-br from-zinc-800/80 to-zinc-900/60 border border-zinc-700/50 p-6 hover:border-zinc-600/70 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.4)] ring-1 ring-white/5 hover:ring-white/10 backdrop-blur-sm">
+    <div 
+      className="group flex gap-5 rounded-2xl bg-gradient-to-br from-zinc-800/80 to-zinc-900/60 border border-zinc-700/50 p-6 hover:border-zinc-600/70 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.4)] ring-1 ring-white/5 hover:ring-white/10 backdrop-blur-sm"
+      onClick={() => {
+        navigate(`/movies/${movie.id}`)
+      }}  
+    >
       <div className="relative overflow-hidden rounded-xl shadow-xl">
         {poster ? (
           <img 
