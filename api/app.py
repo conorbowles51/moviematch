@@ -52,3 +52,5 @@ def create_app():
         return { "ok": True }
     
     return app
+
+app = create_app()
