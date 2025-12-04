@@ -35,7 +35,7 @@ def register():
 
         print("Logging in user")
         login_user(user)
-        
+
         return jsonify({
             "id": user.id,
             "email": user.email,
@@ -53,11 +53,28 @@ def login():
     email = data.get("email", "").strip().lower()
     password = data.get("password", "")
 
+    print("LOGIN attempt:", email)
+
     user = User.query.filter_by(email=email).first()
-    if user is None or not user.check_password(password):
+    print("LOGIN user found: ", bool(user))
+
+    if user:
+        try:
+            ok = user.check_password(password)
+        except Exception as e:
+            print("LOGIN check_password ERROR:", repr(e))
+            ok = False
+        print("LOGIN password ok:", ok)
+    else:
+        ok = False
+
+    if not user or not ok:
+        print("LOGIN result: INVALID")
         return jsonify({"error": "Invalid credentials"}), 401
     
     login_user(user)
+    print("LOGIN result: SUCCESS for", email)
+
     return jsonify({
         "message": "Logged in successfully",
         "user": {"id": user.id, "email": user.email}
