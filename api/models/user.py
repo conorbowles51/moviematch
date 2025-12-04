@@ -1,11 +1,9 @@
 from datetime import datetime
-from app import db
+from app import db, bcrypt
 
 from sqlalchemy import Column, Integer, ForeignKey, String, DateTime
 from flask_login import UserMixin
 from flask_bcrypt import Bcrypt
-
-bcrypt = Bcrypt()
 
 
 # UserMixin gives flask built in properties, e.g, is_authenticated or get_id()
