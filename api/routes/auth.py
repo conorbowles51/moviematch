@@ -10,10 +10,13 @@ auth_bp = Blueprint("auth", __name__)
 # === REGISTER ===
 @auth_bp.post("/register")
 def register():
+    print("Hit register")
     data = request.get_json()
     email = data.get("email", "").strip().lower()
     password = data.get("password", "")
     display_name = data.get("display_name", "")
+
+    print("Payload: ", data)
 
     if not email or not password or not display_name:
         return jsonify({ "error": "Email, password, and display name are required" }), 400
@@ -21,18 +24,26 @@ def register():
     if User.query.filter_by(email=email).first():
         return jsonify({ "error": "Email already registered" }), 400
     
-    user = User(email=email, display_name=display_name)
-    user.set_password(password)
+    try:
+        print("Creating user")
+        user = User(email=email, display_name=display_name)
+        user.set_password(password)
 
-    db.session.add(user)
-    db.session.commit()
+        print("Adding user to db")
+        db.session.add(user)
+        db.session.commit()
 
-    login_user(user)
-    return jsonify({
-        "id": user.id,
-        "email": user.email,
-        "display_name": user.display_name
-    }), 201
+        print("Logging in user")
+        login_user(user)
+        
+        return jsonify({
+            "id": user.id,
+            "email": user.email,
+            "display_name": user.display_name
+        }), 201
+    except Exception as e:
+        print("REGISTER ERROR:", str(e))
+        return jsonify({"error": str(e)}), 500
 
 
 # === LOGIN ===

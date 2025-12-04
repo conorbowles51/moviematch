@@ -6,6 +6,8 @@ interface HeroSectionProps {
   onSearchResultsChange: (results: Movie[]) => any;
 }
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export default function HeroSection({ onSearchResultsChange }: HeroSectionProps) {
   const [_results, setResults] = useState<Movie[]>([])
   
@@ -14,7 +16,7 @@ export default function HeroSection({ onSearchResultsChange }: HeroSectionProps)
   const onSearch = useCallback(async (q: string) => {
     console.log("Searching for: ", q)
     try {
-      const res = await fetch(`http://localhost:5000/api/movies/search?q=${encodeURIComponent(q)}`)
+      const res = await fetch(`${API_URL}/api/movies/search?q=${encodeURIComponent(q)}`)
       if (!res.ok) {
         throw new Error(`Backend error: ${res.status}`)
       }
