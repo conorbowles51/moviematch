@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/navbar/Navbar";
 import { Search, UserPlus, X, Users, WandSparkles, Film } from "lucide-react";
 import type { User } from "../types/user";

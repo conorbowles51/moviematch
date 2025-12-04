@@ -8,7 +8,6 @@ const Home = lazy(() => import("./pages/Home"))
 const Login = lazy(() => import("./pages/Login"));
 const Movie = lazy(() => import("./pages/Movie"));
 const Library = lazy(() => import("./pages/Library"));
-const Groups = lazy(() => import("./pages/Groups"));
 const GroupDetail = lazy(() => import("./pages/GroupDetail"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Star, Calendar, Clock, Film, Play, Users } from "lucide-react";
 import { tmdbBackdropUrl, tmdbPosterUrl } from "../utils/tmdb";
 import Navbar from "../components/navbar/Navbar";
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Movie } from "../../types/movie";
 import LibraryItemCard from "./LibraryItemCard";
@@ -11,7 +11,6 @@ interface LibraryCarouselProps {
 export default function LibraryCarousel({ movies, onRemove }: LibraryCarouselProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [scales, setScales] = useState<number[]>(() => movies.map(() => 1));
-  const hasCenteredRef = useRef(false);
   const [sidePad, setSidePad] = useState(0);
   const boundsRef = useRef<{ minLeft: number; maxLeft: number }>({ minLeft: 0, maxLeft: 0 });
   const [centerIndex, setCenterIndex] = useState(0);

@@ -27,7 +27,7 @@ def create_app():
     bcrypt.init_app(app)
     login_manager.init_app(app)
 
-    CORS(app, supports_credentials=True, origins=ALLOWED_ORIGINS, methods=["GET", "POST", "DELETE", "OPTIONS"],)
+    CORS(app, supports_credentials=True, origins=[ALLOWED_ORIGINS, "https://www.moviematch.dev"], methods=["GET", "POST", "DELETE", "OPTIONS"],)
 
     # import models so Alembic sees them
     from models.user import User

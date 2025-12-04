@@ -1,9 +1,7 @@
 // src/pages/Library.tsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../components/navbar/Navbar";
-import MovieCard from "../components/MovieCard";
-import { useAuth } from "../context/AuthContext";
-import { Trash2, Loader2, PanelsTopLeft, LayoutGrid, Film } from "lucide-react";
+import { LayoutGrid, Film } from "lucide-react";
 import type { Movie } from "../types/movie";
 import LibraryItemCard from "../components/library/LibraryItemCard";
 import LibraryCarousel from "../components/library/LibraryCarousel";

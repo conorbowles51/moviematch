@@ -7,7 +7,7 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ onSearchResultsChange }: HeroSectionProps) {
-  const [results, setResults] = useState<Movie[]>([])
+  const [_results, setResults] = useState<Movie[]>([])
   
 
   // useCallback so that the function is not called when results changes and react re-renders
